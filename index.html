@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addog Nepal - Dog Adoption</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hamburger-menu {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            cursor: pointer;
+            font-size: 28px;
+            color: #667eea;
+            display: none;
+        }
+
+        .search-container {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: none;
+        }
+
+        .search-container input {
+            padding: 8px 10px;
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            width: 200px;
+            font-size: 14px;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            transition: left 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f5f5f5;
+        }
+
+        .sidebar-menu li a i {
+            margin-right: 10px;
+            color: #667eea;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .auth-container h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .category-filters {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-filters h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .category-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .category-chip {
+            padding: 8px 20px;
+            background: #f5f5f5;
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .category-chip:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .category-chip.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .dogs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .dog-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .dog-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .dog-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .dog-info {
+            padding: 20px;
+        }
+
+        .dog-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .dog-info p {
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .dog-info .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status.available {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .status.adopted {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .status.pending {
+            background: #f39c12;
+            color: white;
+        }
+
+        .adopt-btn {
+            width: 100%;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .delete-btn {
+            width: 100%;
+            margin-top: 10px;
+            background: #e74c3c;
+            color: white;
+        }
+
+        .approve-btn {
+            width: 48%;
+            margin-top: 10px;
+            background: #2ecc71;
+            color: white;
+            display: inline-block;
+        }
+
+        .reject-btn {
+            width: 48%;
+            margin-top: 10px;
+            margin-left: 4%;
+            background: #e74c3c;
+            color: white;
+            display: inline-block;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profile-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-info {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .profile-info strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .dogs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .approve-btn, .reject-btn {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .search-container input {
+                width: 150px;
+            }
+        }
+
+        .logged-in .hamburger-menu,
+        .logged-in .search-container {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-dog"></i> Menu
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" onclick="showSection('profileSection'); closeSidebar();"><i class="fas fa-user"></i> My Profile</a></li>
+            <li><a href="#" onclick="showSection('dogsSection'); closeSidebar();"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" onclick="showSection('submitDogSection'); closeSidebar();"><i class="fas fa-plus-circle"></i> Give Dog for Adoption</a></li>
+            <li class="admin-only" style="display: none;"><a href="#" onclick="showSection('adminSection'); closeSidebar();"><i class="fas fa-cog"></i> Admin Panel</a></li>
+            <li><a href="#" onclick="logout(); closeSidebar();"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <!-- Hamburger Menu -->
+            <div class="hamburger-menu" id="hamburgerMenu" onclick="openSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container" id="searchContainer">
+                <input type="text" id="searchInput" placeholder="Search dogs..." onkeyup="searchDogs()">
+            </div>
+
+            <div class="logo">
+                <img src="logo.jpg" alt="Addog Nepal" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            </div>
+            <h1>Addog Nepal</h1>
+            <p>Give a loving home to dogs in need</p>
+            <div class="nav-buttons" id="navButtons"></div>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="section active">
+            <div class="auth-container">
+                <h2>Welcome to Addog Nepal🥰</h2>
+                <div id="loginMessage"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px; color: #666;">
+                    Don't have an account? <a href="#" onclick="showSection('registerSection')" style="color: #667eea; font-weight: bold;">Register</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Section -->
+        <div id="registerSection" class="section">
+            <div class="auth-container">
+                <h2>Create Account</h2>
+                <div id="registerMessage"></div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="registerName" required placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="registerEmail" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="registerPhone" required placeholder="+977-9800000000">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="registerPassword" required placeholder="••••••••" minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px; color: #666;">
+                    Already have an account? <a href="#" onclick="showSection('loginSection')" style="color: #667eea; font-weight: bold;">Login</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- My Profile Section -->
+        <div id="profileSection" class="section">
+            <div class="profile-card">
+                <h2><i class="fas fa-user-circle"></i> My Profile</h2>
+                <div id="profileContent"></div>
+            </div>
+        </div>
+
+        <!-- Dogs List Section (Public) -->
+        <div id="dogsSection" class="section">
+            <!-- Category Filters -->
+            <div class="category-filters">
+                <h3><i class="fas fa-filter"></i> Filter by Breed</h3>
+                <div class="category-chips">
+                    <div class="category-chip active" onclick="filterByCategory('All')">All Dogs</div>
+                    <div class="category-chip" onclick="filterByCategory('Nepali Street Dog')">Nepali Street Dog</div>
+                    <div class="category-chip" onclick="filterByCategory('Pomeranian')">Pomeranian</div>
+                    <div class="category-chip" onclick="filterByCategory('Japanese Spitz')">Japanese Spitz</div>
+                    <div class="category-chip" onclick="filterByCategory('German Shepherd')">German Shepherd</div>
+                    <div class="category-chip" onclick="filterByCategory('Labrador')">Labrador</div>
+                    <div class="category-chip" onclick="filterByCategory('Beagle')">Beagle</div>
+                    <div class="category-chip" onclick="filterByCategory('Golden Retriever')">Golden Retriever</div>
+                    <div class="category-chip" onclick="filterByCategory('Siberian Husky')">Siberian Husky</div>
+                </div>
+            </div>
+
+            <div id="dogsMessage"></div>
+            <div id="dogsGrid" class="dogs-grid"></div>
+        </div>
+
+        <!-- Submit Dog for Adoption -->
+        <div id="submitDogSection" class="section">
+            <div class="auth-container" style="max-width: 600px;">
+                <h2>Submit Your Dog for Adoption</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                    Fill this form to submit your dog for adoption. Admin will review and approve it.
+                </p>
+                <div id="submitMessage"></div>
+                <form id="submitDogForm">
+                    <div class="form-group">
+                        <label>Dog Name</label>
+                        <input type="text" id="submitDogName" required placeholder="e.g., Moti">
+                    </div>
+                    <div class="form-group">
+                        <label>Breed</label>
+                        <select id="submitDogBreed" required>
+                            <option value="">Select Breed</option>
+                            <option value="Nepali Street Dog">Nepali Street Dog</option>
+                            <option value="Pomeranian">Pomeranian</option>
+                            <option value="Japanese Spitz">Japanese Spitz</option>
+                            <option value="German Shepherd">German Shepherd</option>
+                            <option value="Labrador">Labrador</option>
+                            <option value="Beagle">Beagle</option>
+                            <option value="Golden Retriever">Golden Retriever</option>
+                            <option value="Siberian Husky">Siberian Husky</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Age (years)</label>
+                        <input type="number" id="submitDogAge" required placeholder="e.g., 2" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="submitDogGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="submitDogDescription" rows="4" required placeholder="Tell us about your dog..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="url" id="submitDogImage" required placeholder="https://example.com/dog.jpg">
+                        <small style="color: #666; display: block; margin-top: 5px;">Upload image to Imgur.com or use Unsplash URL</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Contact Number</label>
+                        <input type="tel" id="submitContactNumber" required placeholder="+977-9800000000">
+                    </div>
+                    <div class="form-group">
+                        <label>Reason for Giving Up</label>
+                        <textarea id="submitReason" rows="3" required placeholder="Please tell us why you're giving up this dog..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit for Review</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Section -->
+        <div id="adminSection" class="section">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchAdminTab('addDog')">Add Dog</button>
+                <button class="tab-btn" onclick="switchAdminTab('reviewSubmissions')">Review Submissions</button>
+                <button class="tab-btn" onclick="switchAdminTab('manageDogs')">Manage Dogs</button>
+            </div>
+
+            <!-- Add Dog Tab -->
+            <div id="addDogTab" class="admin-tab">
+                <div class="auth-container" style="max-width: 600px;">
+                    <h2>Add New Dog (Admin Only)</h2>
+                    <div id="adminMessage"></div>
+                    <form id="addDogForm">
+                        <div class="form-group">
+                            <label>Dog Name</label>
+                            <input type="text" id="dogName" required placeholder="e.g., Moti">
+                        </div>
+                        <div class="form-group">
+                            <label>Breed</label>
+                            <select id="dogBreed" required>
+                                <option value="">Select Breed</option>
+                                <option value="Nepali Street Dog">Nepali Street Dog</option>
+                                <option value="Pomeranian">Pomeranian</option>
+                                <option value="Japanese Spitz">Japanese Spitz</option>
+                                <option value="German Shepherd">German Shepherd</option>
+                                <option value="Labrador">Labrador</option>
+                                <option value="Beagle">Beagle</option>
+                                <option value="Golden Retriever">Golden Retriever</option>
+                                <option value="Siberian Husky">Siberian Husky</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Age (years)</label>
+                            <input type="number" id="dogAge" required placeholder="e.g., 2" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="dogGender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="dogDescription" rows="4" required placeholder="Tell us about this dog..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="dogImage" required placeholder="https://example.com/dog.jpg">
+                            <small style="color: #666; display: block; margin-top: 5px;">Paste an image URL</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Dog</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Review Submissions Tab -->
+            <div id="reviewSubmissionsTab" class="admin-tab" style="display: none;">
+                <div id="submissionsMessage"></div>
+                <div id="submissionsGrid" class="dogs-grid"></div>
+            </div>
+
+            <!-- Manage Dogs Tab -->
+            <div id="manageDogsTab" class="admin-tab" style="display: none;">
+                <div id="manageMessage"></div>
+                <div id="manageGrid" class="dogs-grid"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+
+//configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyC5B68hnf_slPVpmmzuIxohQLr3z1comsM",
+            authDomain: "addog-nepal.firebaseapp.com",
+            projectId: "addog-nepal",
+            storageBucket: "addog-nepal.firebasestorage.app",
+            messagingSenderId: "95417572421",
+            appId: "1:95417572421:web:c65adfb77cc25d114cd72c",
+            measurementId: "G-74S8L92ZP0"
+        };
+
+        const ADMIN_EMAIL = "renukachaudhary9999999@gmail.com";
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let isAdmin = false;
+        let allDogs = [];
+        let selectedCategory = 'All';
+
+        // Sidebar functions
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('active');
+            document.getElementById('sidebarOverlay').classList.add('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+
+        // Auth State Observer
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            isAdmin = user && user.email === ADMIN_EMAIL;
+            console.log("✅ Current user email:", user ? user.email : "No user");
+            console.log("✅ Admin email in code:", ADMIN_EMAIL);
+            console.log("✅ Is Admin:", isAdmin);
+            updateNavigation();
+            if (user) {
+                document.body.classList.add('logged-in');
+                if (isAdmin) {
+                    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+                }
+                showSection('dogsSection');
+                loadDogs();
+                loadUserProfile();
+            } else {
+                document.body.classList.remove('logged-in');
+                showSection('loginSection');
+            }
+        });
+
+        // Load User Profile
+        async function loadUserProfile() {
+            if (!currentUser) return;
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    document.getElementById('profileContent').innerHTML = `
+                        <div class="profile-info">
+                            <strong><i class="fas fa-user"></i> Name</strong>
+                            ${userData.name || 'Not provided'}
+                        </div>
+                        <div class="profile-info">
+                            <strong><i class="fas fa-envelope"></i> Email</strong>
+                            ${userData.email || currentUser.email}
+                        </div>
+                        <div class="profile-info">
+                            <strong><i class="fas fa-phone"></i> Phone</strong>
+                            ${userData.phone || 'Not provided'}
+                        </div>
+                        <div class="profile-info">
+                            <strong><i class="fas fa-calendar"></i> Member Since</strong>
+                            ${userData.createdAt ? new Date(userData.createdAt.toDate()).toLocaleDateString() : 'Recently'}
+                        </div>
+                        ${isAdmin ? '<div class="profile-info" style="background: #f39c12; color: white;"><strong><i class="fas fa-crown"></i> Role</strong> Administrator</div>' : ''}
+                    `;
+                }
+            } catch (error) {
+                console.error("Error loading profile:", error);
+            }
+        }
+
+        // Update Navigation
+        function updateNavigation() {
+            const navButtons = document.getElementById('navButtons');
+            if (currentUser) {
+                let adminBadge = isAdmin ? '<span class="admin-badge">ADMIN</span>' : '';
+                navButtons.innerHTML = `
+                    <button class="btn btn-secondary" onclick="showSection('dogsSection')">Available Dogs</button>
+                    <button class="btn btn-success" onclick="showSection('submitDogSection')">Give Dog for Adoption</button>
+                    ${isAdmin ? '<button class="btn btn-primary" onclick="showSection(\'adminSection\')">Admin Panel</button>' : ''}
+                    <button class="btn btn-danger" onclick="logout()">Logout ${adminBadge}</button>
+                `;
+            } else {
+                navButtons.innerHTML = `
+                    <button class="btn btn-secondary" onclick="showSection('loginSection')">Login</button>
+                    <button class="btn btn-secondary" onclick="showSection('registerSection')">Register</button>
+                `;
+            }
+        }
+
+        // Show Section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            if (sectionId === 'dogsSection') {
+                loadDogs();
+            } else if (sectionId === 'adminSection' && isAdmin) {
+                switchAdminTab('addDog');
+            } else if (sectionId === 'profileSection') {
+                loadUserProfile();
+            }
+        }
+
+        // Filter by Category
+        function filterByCategory(category) {
+            selectedCategory = category;
+            document.querySelectorAll('.category-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            displayFilteredDogs();
+        }
+
+        // Search Dogs
+        function searchDogs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredDogs = allDogs.filter(dog => {
+                const matchesSearch = dog.name.toLowerCase().includes(searchTerm) || 
+                                    dog.breed.toLowerCase().includes(searchTerm) ||
+                                    dog.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'All' || dog.breed === selectedCategory;
+                return matchesSearch && matchesCategory;
+            });
+            displayDogs(filteredDogs);
+        }
+
+        // Display Filtered Dogs
+        function displayFilteredDogs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredDogs = allDogs.filter(dog => {
+                const matchesSearch = !searchTerm || 
+                                    dog.name.toLowerCase().includes(searchTerm) || 
+                                    dog.breed.toLowerCase().includes(searchTerm) ||
+                                    dog.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'All' || dog.breed === selectedCategory;
+                return matchesSearch && matchesCategory;
+            });
+            displayDogs(filteredDogs);
+        }
+
+        // Display Dogs
+        function displayDogs(dogs) {
+            const dogsGrid = document.getElementById('dogsGrid');
+            if (dogs.length === 0) {
+                dogsGrid.innerHTML = '<div class="loading">No dogs found matching your criteria.</div>';
+                return;
+            }
+            dogsGrid.innerHTML = '';
+            dogs.forEach(dog => {
+                const dogCard = createDogCard(dog.id, dog, false);
+                dogsGrid.innerHTML += dogCard;
+            });
+        }
+
+        // Switch Admin Tabs
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.admin-tab').forEach(tab => tab.style.display = 'none');
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+            
+            if (tabName === 'reviewSubmissions') {
+                loadSubmissions();
+            } else if (tabName === 'manageDogs') {
+                loadManageDogs();
+            }
+        }
+
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const name = document.getElementById('registerName').value;
+            const phone = document.getElementById('registerPhone').value;
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                await db.collection('users').doc(userCredential.user.uid).set({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showMessage('registerMessage', 'Account created successfully!', 'success');
+            } catch (error) {
+                showMessage('registerMessage', error.message, 'error');
+            }
+        });
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showMessage('loginMessage', 'Login successful!', 'success');
+            } catch (error) {
+                showMessage('loginMessage', error.message, 'error');
+            }
+        });
+
+        // Logout
+        function logout() {
+            auth.signOut();
+        }
+
+        // Submit Dog for Adoption (User)
+        document.getElementById('submitDogForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                showMessage('submitMessage', 'Please login first!', 'error');
+                return;
+            }
+
+            const dogData = {
+                name: document.getElementById('submitDogName').value,
+                breed: document.getElementById('submitDogBreed').value,
+                age: parseInt(document.getElementById('submitDogAge').value),
+                gender: document.getElementById('submitDogGender').value,
+                description: document.getElementById('submitDogDescription').value,
+                imageUrl: document.getElementById('submitDogImage').value,
+                contactNumber: document.getElementById('submitContactNumber').value,
+                reason: document.getElementById('submitReason').value,
+                status: 'pending',
+                submittedBy: currentUser.email,
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                type: 'user_submission'
+            };
+
+            try {
+                await db.collection('dog_submissions').add(dogData);
+                showMessage('submitMessage', 'Your submission has been sent for admin review!', 'success');
+                document.getElementById('submitDogForm').reset();
+            } catch (error) {
+                showMessage('submitMessage', error.message, 'error');
+            }
+        });
+
+        // Add Dog (Admin Only)
+        document.getElementById('addDogForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAdmin) {
+                showMessage('adminMessage', 'Admin access required!', 'error');
+                return;
+            }
+
+            const dogData = {
+                name: document.getElementById('dogName').value,
+                breed: document.getElementById('dogBreed').value,
+                age: parseInt(document.getElementById('dogAge').value),
+                gender: document.getElementById('dogGender').value,
+                description: document.getElementById('dogDescription').value,
+                imageUrl: document.getElementById('dogImage').value,
+                status: 'available',
+                addedBy: 'admin',
+                addedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                type: 'admin_added'
+            };
+
+            try {
+                await db.collection('dogs').add(dogData);
+                showMessage('adminMessage', 'Dog added successfully!', 'success');
+                document.getElementById('addDogForm').reset();
+                loadDogs();
+            } catch (error) {
+                showMessage('adminMessage', error.message, 'error');
+            }
+        });
+
+        // Load Dogs (Public)
+        async function loadDogs() {
+            const dogsGrid = document.getElementById('dogsGrid');
+            dogsGrid.innerHTML = '<div class="loading">Loading dogs...</div>';
+
+            try {
+                const snapshot = await db.collection('dogs').where('status', 'in', ['available', 'adopted']).orderBy('addedAt', 'desc').get();
+                
+                if (snapshot.empty) {
+                    dogsGrid.innerHTML = '<div class="loading">No dogs available yet.</div>';
+                    return;
+                }
+
+                allDogs = [];
+                snapshot.forEach(doc => {
+                    allDogs.push({ id: doc.id, ...doc.data() });
+                });
+                displayFilteredDogs();
+            } catch (error) {
+                dogsGrid.innerHTML = `<div class="loading">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Load Submissions (Admin)
+        async function loadSubmissions() {
+            const grid = document.getElementById('submissionsGrid');
+            grid.innerHTML = '<div class="loading">Loading submissions...</div>';
+
+            try {
+                const snapshot = await db.collection('dog_submissions').where('status', '==', 'pending').orderBy('submittedAt', 'desc').get();
+                
+                if (snapshot.empty) {
+                    grid.innerHTML = '<div class="loading">No pending submissions.</div>';
+                    return;
+                }
+
+                grid.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const dog = doc.data();
+                    const dogCard = createSubmissionCard(doc.id, dog);
+                    grid.innerHTML += dogCard;
+                });
+            } catch (error) {
+                grid.innerHTML = `<div class="loading">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Load Manage Dogs (Admin)
+        async function loadManageDogs() {
+            const grid = document.getElementById('manageGrid');
+            grid.innerHTML = '<div class="loading">Loading dogs...</div>';
+
+            try {
+                const snapshot = await db.collection('dogs').orderBy('addedAt', 'desc').get();
+                
+                if (snapshot.empty) {
+                    grid.innerHTML = '<div class="loading">No dogs to manage.</div>';
+                    return;
+                }
+
+                grid.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const dog = doc.data();
+                    const dogCard = createDogCard(doc.id, dog, true);
+                    grid.innerHTML += dogCard;
+                });
+            } catch (error) {
+                grid.innerHTML = `<div class="loading">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Create Dog Card
+        function createDogCard(id, dog, isManage) {
+            return `
+                <div class="dog-card">
+                    <img src="${dog.imageUrl}" alt="${dog.name}" class="dog-image" onerror="this.src='https://via.placeholder.com/300x250?text=Dog+Image'">
+                    <div class="dog-info">
+                        <h3>${dog.name}</h3>
+                        <p><strong>Breed:</strong> ${dog.breed}</p>
+                        <p><strong>Age:</strong> ${dog.age} years</p>
+                        <p><strong>Gender:</strong> ${dog.gender}</p>
+                        <p>${dog.description}</p>
+                        <span class="status ${dog.status}">${dog.status.toUpperCase()}</span>
+                        ${dog.status === 'available' && currentUser && !isManage ? `
+                            <button class="btn adopt-btn" onclick="adoptDog('${id}')">Adopt Me! 🐕</button>
+                        ` : ''}
+                        ${isManage && isAdmin ? `
+                            <button class="btn delete-btn" onclick="deleteDog('${id}')">Delete Dog</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create Submission Card
+        function createSubmissionCard(id, dog) {
+            return `
+                <div class="dog-card">
+                    <img src="${dog.imageUrl}" alt="${dog.name}" class="dog-image" onerror="this.src='https://via.placeholder.com/300x250?text=Dog+Image'">
+                    <div class="dog-info">
+                        <h3>${dog.name}</h3>
+                        <p><strong>Breed:</strong> ${dog.breed}</p>
+                        <p><strong>Age:</strong> ${dog.age} years</p>
+                        <p><strong>Gender:</strong> ${dog.gender}</p>
+                        <p>${dog.description}</p>
+                        <p><strong>Contact:</strong> ${dog.contactNumber}</p>
+                        <p><strong>Reason:</strong> ${dog.reason}</p>
+                        <p><strong>Submitted by:</strong> ${dog.submittedBy}</p>
+                        <span class="status pending">PENDING REVIEW</span>
+                        <button class="btn approve-btn" onclick="approveSubmission('${id}', ${JSON.stringify(dog).replace(/"/g, '&quot;')})">Approve</button>
+                        <button class="btn reject-btn" onclick="rejectSubmission('${id}')">Reject</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Adopt Dog
+        async function adoptDog(dogId) {
+            if (!currentUser) {
+                showMessage('dogsMessage', 'Please login to adopt!', 'error');
+                return;
+            }
+
+            if (confirm('Are you sure you want to adopt this dog?')) {
+                try {
+                    await db.collection('dogs').doc(dogId).update({
+                        status: 'adopted',
+                        adoptedBy: currentUser.email,
+                        adoptedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showMessage('dogsMessage', 'Congratulations! Dog adopted successfully! Admin will contact you soon.', 'success');
+                    loadDogs();
+                } catch (error) {
+                    showMessage('dogsMessage', error.message, 'error');
+                }
+            }
+        }
+
+        // Approve Submission (Admin)
+        async function approveSubmission(submissionId, dogData) {
+            if (!isAdmin) return;
+
+            try {
+                await db.collection('dogs').add({
+                    name: dogData.name,
+                    breed: dogData.breed,
+                    age: dogData.age,
+                    gender: dogData.gender,
+                    description: dogData.description,
+                    imageUrl: dogData.imageUrl,
+                    status: 'available',
+                    addedBy: 'user',
+                    originalOwner: dogData.submittedBy,
+                    ownerContact: dogData.contactNumber,
+                    addedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    type: 'user_approved'
+                });
+
+                await db.collection('dog_submissions').doc(submissionId).update({
+                    status: 'approved',
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                showMessage('submissionsMessage', 'Submission approved and dog added to adoption list!', 'success');
+                loadSubmissions();
+            } catch (error) {
+                showMessage('submissionsMessage', error.message, 'error');
+            }
+        }
+
+        // Reject Submission (Admin)
+        async function rejectSubmission(submissionId) {
+            if (!isAdmin) return;
+
+            if (confirm('Are you sure you want to reject this submission?')) {
+                try {
+                    await db.collection('dog_submissions').doc(submissionId).update({
+                        status: 'rejected',
+                        rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    showMessage('submissionsMessage', 'Submission rejected.', 'success');
+                    loadSubmissions();
+                } catch (error) {
+                    showMessage('submissionsMessage', error.message, 'error');
+                }
+            }
+        }
+
+        // Delete Dog (Admin)
+        async function deleteDog(dogId) {
+            if (!isAdmin) return;
+
+            if (confirm('Are you sure you want to delete this dog from the list?')) {
+                try {
+                    await db.collection('dogs').doc(dogId).delete();
+                    showMessage('manageMessage', 'Dog deleted successfully!', 'success');
+                    loadManageDogs();
+                } catch (error) {
+                    showMessage('manageMessage', error.message, 'error');
+                }
+            }
+        }
+
+        // Show Message
+        function showMessage(elementId, message, type) {
+            const messageDiv = document.getElementById(elementId);
+            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
